@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sudamshu Rao — data, models & agents</title>
+<meta name="description" content="Sudamshu Rao builds analytics, machine learning models and AI agents. Projects, experience and a standing invitation to talk data.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --mist:#F1EFF6;
+    --paper:#FFFFFF;
+    --ink:#2B2140;
+    --ink-soft:#5E5672;
+    --line:#DCD7E6;
+    --peach:#FCE3B0;
+    --marigold:#E89A2C;
+    --rose:#D9506E;
+    --plum:#4A2C6E;
+    --teal:#2F7F7B;
+    --violet:#7A5FA8;
+    --radius-lg:22px;
+    --radius-sm:999px;
+    --font:"Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  body{
+    margin:0;background:var(--mist);color:var(--ink);
+    font-family:var(--font);font-size:17px;line-height:1.6;
+    font-variation-settings:"opsz" 14;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit}
+  :focus-visible{outline:3px solid var(--rose);outline-offset:3px;border-radius:6px}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 28px}
+
+  /* nav */
+  .nav{display:flex;justify-content:space-between;align-items:center;padding:22px 0}
+  .brand{font-weight:700;font-size:18px;text-decoration:none;display:flex;align-items:center;gap:10px}
+  .brand svg{width:22px;height:22px}
+  .nav ul{list-style:none;display:flex;gap:26px;margin:0;padding:0}
+  .nav ul a{text-decoration:none;color:var(--ink-soft);font-size:15px}
+  .nav ul a:hover{color:var(--ink)}
+  @media (max-width:720px){.nav ul{display:none}}
+
+  /* hero */
+  .hero{display:grid;grid-template-columns:1.2fr 1fr;gap:48px;align-items:center;padding:40px 0 72px}
+  .hero h1{
+    font-size:clamp(44px,5.6vw,70px);line-height:1.02;margin:0 0 24px;
+    font-weight:750;letter-spacing:-0.025em;font-variation-settings:"opsz" 96;
+  }
+  .hero p.lede{font-size:20px;line-height:1.55;color:var(--ink-soft);max-width:34ch;margin:0 0 32px}
+  .btns{display:flex;gap:12px;flex-wrap:wrap}
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;padding:13px 22px;border-radius:var(--radius-sm);
+    font:600 16px/1 var(--font);text-decoration:none;border:2px solid var(--ink);cursor:pointer;
+    transition:background .15s, color .15s;
+  }
+  .btn.solid{background:var(--ink);color:var(--mist)}
+  .btn.solid:hover{background:var(--plum);border-color:var(--plum)}
+  .btn.ghost{background:transparent;color:var(--ink)}
+  .btn.ghost:hover{background:var(--paper)}
+  .map{position:relative}
+  .map canvas{width:100%;aspect-ratio:1/0.92;display:block;cursor:crosshair;touch-action:none}
+  .map figcaption{font-size:14px;color:var(--ink-soft);margin-top:10px;display:flex;gap:10px;align-items:center}
+  .ramp{display:inline-block;width:72px;height:8px;border-radius:4px;
+    background:linear-gradient(90deg,var(--peach),var(--marigold),var(--rose),var(--plum))}
+  @media (max-width:880px){
+    .hero{grid-template-columns:1fr;gap:28px;padding-top:16px}
+    .map{order:-1;max-width:460px}
+  }
+
+  /* section scaffolding */
+  section.block{padding:72px 0;border-top:1px solid var(--line)}
+  .sec-head{display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap;margin-bottom:32px}
+  h2{font-size:clamp(32px,4vw,44px);line-height:1.1;margin:0;font-weight:700;letter-spacing:-0.02em;font-variation-settings:"opsz" 72}
+  .sec-sub{color:var(--ink-soft);margin:8px 0 0;max-width:52ch}
+
+  /* filters */
+  .filters{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{
+    font:500 15px/1 var(--font);padding:9px 15px;border-radius:var(--radius-sm);
+    border:1.5px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer;
+    display:inline-flex;gap:8px;align-items:center;
+  }
+  .chip[aria-pressed="true"]{background:var(--ink);color:var(--mist);border-color:var(--ink)}
+  .hexdot{width:12px;height:12px;flex:none;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}
+
+  /* project list */
+  .projects{list-style:none;margin:0;padding:0;border-top:2px solid var(--ink)}
+  .proj{border-bottom:1px solid var(--line)}
+  .proj[hidden]{display:none}
+  .proj-toggle{
+    all:unset;box-sizing:border-box;width:100%;cursor:pointer;
+    display:grid;grid-template-columns:44px 1fr auto;gap:18px;align-items:start;padding:26px 6px;
+  }
+  .proj-toggle:focus-visible{outline:3px solid var(--rose);outline-offset:-3px;border-radius:8px}
+  .proj-toggle:hover .proj-title{color:var(--plum)}
+  .glyph{display:flex;gap:3px;flex-wrap:wrap;width:40px;padding-top:8px}
+  .glyph .hexdot{width:16px;height:18px}
+  .proj-title{font-size:26px;line-height:1.2;font-weight:650;margin:0 0 6px;letter-spacing:-0.01em;font-variation-settings:"opsz" 40}
+  .proj-hook{margin:0;color:var(--ink-soft);max-width:62ch}
+  .tools{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;padding:0;list-style:none}
+  .tools li{font-size:13.5px;padding:3px 10px;border-radius:var(--radius-sm);background:var(--paper);border:1px solid var(--line)}
+  .proj-side{display:flex;flex-direction:column;align-items:end;gap:12px;padding-top:6px}
+  .status{font-size:13.5px;font-weight:600;padding:4px 11px;border-radius:var(--radius-sm);white-space:nowrap}
+  .status.live{background:var(--teal);color:#fff}
+  .status.soon{background:var(--peach);color:#6A4300}
+  .plus{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--ink);position:relative;flex:none}
+  .plus::before,.plus::after{content:"";position:absolute;left:50%;top:50%;width:12px;height:2px;background:var(--ink);transform:translate(-50%,-50%);transition:transform .25s}
+  .plus::after{transform:translate(-50%,-50%) rotate(90deg)}
+  .proj-toggle[aria-expanded="true"] .plus::after{transform:translate(-50%,-50%) rotate(0deg)}
+  .proj-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .32s ease}
+  .proj-toggle[aria-expanded="true"] + .proj-body{grid-template-rows:1fr}
+  @media (prefers-reduced-motion:reduce){.proj-body,.plus::after{transition:none}}
+  .proj-body > div{overflow:hidden}
+  .case{
+    margin:0 6px 30px 68px;background:var(--paper);border-radius:var(--radius-lg);
+    padding:28px 30px;display:grid;grid-template-columns:1fr 1fr;gap:26px 40px;
+  }
+  .case h4{margin:0 0 6px;font-size:17px;font-weight:700}
+  .case p,.case ul{margin:0;color:var(--ink-soft)}
+  .case ul{padding-left:18px}
+  .case li{margin-bottom:4px}
+  .case .wide{grid-column:1/-1}
+  .case p.fine{font-size:14.5px;margin-top:8px;font-style:italic}
+  .case-links{display:flex;gap:10px;flex-wrap:wrap}
+  .case-links a,.case-links span{font-size:15px;font-weight:600;padding:9px 16px;border-radius:var(--radius-sm);border:1.5px solid var(--ink);text-decoration:none}
+  .case-links a:hover{background:var(--mist)}
+  .case-links span{border-style:dashed;color:var(--ink-soft);border-color:var(--ink-soft)}
+  @media (max-width:720px){
+    .proj-toggle{grid-template-columns:1fr auto;}
+    .glyph{display:none}
+    .case{margin-left:0;grid-template-columns:1fr;padding:22px}
+    .proj-title{font-size:22px}
+  }
+  .more-note{margin:22px 0 0;color:var(--ink-soft);font-size:15px}
+
+  /* tinkering */
+  .notes{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;list-style:none;padding:0;margin:0}
+  .notes li{border-left:3px solid var(--marigold);padding:4px 0 4px 18px}
+  .notes li:nth-child(2){border-color:var(--rose)}
+  .notes li:nth-child(3){border-color:var(--teal)}
+  .notes h3{font-size:19px;line-height:1.3;margin:0 0 8px;font-weight:650}
+  .notes p{margin:0;color:var(--ink-soft);font-size:16px}
+  @media (max-width:820px){.notes{grid-template-columns:1fr}}
+
+  /* path / timeline */
+  .path{display:grid;grid-template-columns:1fr 1fr;gap:48px}
+  .path h3{font-size:15px;font-weight:600;color:var(--ink-soft);margin:0 0 18px}
+  .tl{list-style:none;margin:0;padding:0;position:relative}
+  .tl::before{content:"";position:absolute;left:7px;top:8px;bottom:8px;width:2px;background:var(--line)}
+  .tl li{position:relative;padding:0 0 30px 34px}
+  .tl li::before{content:"";position:absolute;left:0;top:6px;width:16px;height:18px;background:var(--plum);
+    clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}
+  .tl li.now::before{background:var(--rose)}
+  .tl .role{font-weight:700;font-size:19px;line-height:1.3}
+  .tl .where{color:var(--ink)}
+  .tl .when{font-size:14.5px;color:var(--ink-soft);margin:2px 0 8px}
+  .tl p{margin:0;color:var(--ink-soft);font-size:16px;max-width:52ch}
+  @media (max-width:820px){.path{grid-template-columns:1fr;gap:12px}}
+
+  /* off the clock */
+  .offclock{display:grid;grid-template-columns:1.2fr 1fr;gap:40px;align-items:center;
+    background:var(--ink);color:var(--mist);border-radius:28px;padding:48px}
+  .offclock h2{color:var(--mist)}
+  .offclock p{color:#CFC8DD;max-width:50ch}
+  .offclock .btn{border-color:var(--peach);color:var(--peach)}
+  .offclock .btn:hover{background:var(--peach);color:var(--ink)}
+  .lift{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .lift div{background:rgba(255,255,255,.07);border-radius:16px;padding:18px}
+  .lift b{display:block;font-size:30px;line-height:1.1;color:var(--peach);font-variation-settings:"opsz" 72}
+  .lift span{font-size:14px;color:#CFC8DD}
+  @media (max-width:820px){.offclock{grid-template-columns:1fr;padding:32px 24px}}
+
+  /* talk */
+  .talk h2{font-size:clamp(36px,5vw,56px);max-width:16ch}
+  .starters{display:flex;flex-wrap:wrap;gap:10px;margin:28px 0}
+  .starters a{font-size:16px;padding:11px 18px;border-radius:var(--radius-sm);background:var(--paper);border:1.5px solid var(--line);text-decoration:none}
+  .starters a:hover{border-color:var(--ink)}
+  .contact-line{display:flex;flex-wrap:wrap;gap:14px 28px;align-items:center;font-size:17px}
+  .contact-line a{text-decoration-color:var(--rose);text-underline-offset:4px;text-decoration-thickness:2px}
+  .copy{font:600 14px/1 var(--font);padding:8px 13px;border-radius:var(--radius-sm);border:1.5px solid var(--ink);background:transparent;cursor:pointer;color:var(--ink)}
+  footer{padding:40px 0 56px;color:var(--ink-soft);font-size:14.5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="nav" aria-label="Main">
+    <a class="brand" href="#top">
+      <svg viewBox="0 0 22 24" aria-hidden="true"><polygon points="11,0 22,6 22,18 11,24 0,18 0,6" fill="#D9506E"/></svg>
+      Sudamshu Rao
+    </a>
+    <ul>
+      <li><a href="#builds">Builds</a></li>
+      <li><a href="#tinkering">Tinkering</a></li>
+      <li><a href="#path">Path</a></li>
+      <li><a href="#off-the-clock">Off the clock</a></li>
+      <li><a href="#talk">Let's talk</a></li>
+    </ul>
+  </nav>
+
+  <header class="hero" id="top">
+    <div>
+      <h1>Hi, I'm Sudamshu. I like data. All of it.</h1>
+      <p class="lede">The digging, the modeling, the dashboards, and lately, building agents that do the tedious parts for me. This is where I keep the things I've built. Poke around and ask me anything.</p>
+      <div class="btns">
+        <a class="btn solid" href="#builds">See what I've built</a>
+        <a class="btn ghost" href="#talk">Start a conversation</a>
+      </div>
+    </div>
+    <figure class="map" style="margin:0">
+      <canvas id="hexmap" aria-label="Interactive hexagon heat map. Move your cursor or finger over it to add heat." role="img"></canvas>
+      <figcaption><span class="ramp" aria-hidden="true"></span> Hexagons and heat: how I've been seeing cities lately. Move your cursor across it.</figcaption>
+    </figure>
+  </header>
+</div>
+
+<main>
+  <section class="block" id="builds">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <h2>Things I've built</h2>
+          <p class="sec-sub">Open any project for the story behind it: why I built it, how it works, and what I'd do next.</p>
+        </div>
+        <div class="filters" role="group" aria-label="Filter projects"></div>
+      </div>
+      <ul class="projects" id="projects"></ul>
+      <p class="more-note">More on the way. I'm always building something.</p>
+    </div>
+  </section>
+
+  <section class="block" id="tinkering">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <h2>What I'm tinkering with</h2>
+          <p class="sec-sub">Half-finished questions I keep coming back to. Happy to talk about any of them.</p>
+        </div>
+      </div>
+      <ul class="notes">
+        <li>
+          <h3>How much do cleaner labels actually buy you?</h3>
+          <p>I'm comparing a model trained on raw 311 reports against one trained on computer-vision-verified labels to see what the extra verification is worth.</p>
+        </li>
+        <li>
+          <h3>Pre-training a tiny GPT from scratch</h3>
+          <p>A small decoder-only Transformer trained on TinyStories in PyTorch and tracked with MLflow, to understand what happens below the API.</p>
+        </li>
+        <li>
+          <h3>Rules first, LLMs only where they earn it</h3>
+          <p>Designing systems that stay deterministic by default and call a local model (Ollama) only for the few steps that really need language.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="block" id="path">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <h2>Where I've been</h2>
+          <p class="sec-sub">The short version. The long version lives on <a href="https://linkedin.com/in/sudamshu-rao">LinkedIn</a>.</p>
+        </div>
+      </div>
+      <div class="path">
+        <div>
+          <h3>Work</h3>
+          <ol class="tl">
+            <li class="now">
+              <div class="role">Data Science Analyst</div>
+              <div class="where">Quark Lab, Arizona State University</div>
+              <div class="when">Aug 2025 – Present</div>
+              <p>GeoAI urban analytics: spatial pipelines on hexagonal grids, model distillation, and an interactive digital twin for exploring encampment risk in Los Angeles.</p>
+            </li>
+            <li>
+              <div class="role">Teaching Assistant</div>
+              <div class="where">Arizona State University</div>
+              <div class="when">Jan 2026 – May 2026</div>
+              <p>Mentored 9 senior capstone teams through projects like Siamese networks, predictive maintenance and intrusion monitoring.</p>
+            </li>
+            <li>
+              <div class="role">AI Engineer</div>
+              <div class="where">Nyayanidhi (legal tech), Remote</div>
+              <div class="when">May 2023 – Aug 2024</div>
+              <p>Built NLP pipelines and a retrieval-augmented generation (RAG) system over legal documents on AWS, using Bedrock embeddings, pgvector, SageMaker, Airflow and Power BI.</p>
+            </li>
+          </ol>
+        </div>
+        <div>
+          <h3>Education</h3>
+          <ol class="tl">
+            <li>
+              <div class="role">MS, Data Science, Analytics and Engineering</div>
+              <div class="where">Arizona State University</div>
+              <div class="when">Aug 2024 – May 2026 · GPA 3.66</div>
+            </li>
+            <li>
+              <div class="role">B.E., Electronics and Instrumentation</div>
+              <div class="where">B.M.S. College of Engineering, Bengaluru</div>
+              <div class="when">2018 – 2022</div>
+            </li>
+          </ol>
+          <a class="btn ghost" href="Sudamshu_Rao_Resume.pdf">Download my resume</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="off-the-clock">
+    <div class="wrap">
+      <div class="offclock">
+        <div>
+          <h2>Off the clock, I'm in the gym</h2>
+          <p>I've been training for over 10 years, and bodybuilding is the thing I'm most disciplined about. Progressive overload, tracking everything, patience over shortcuts. It turns out that's also how I approach data. One day I'll be on a competition stage.</p>
+          <p>It's also why I built Fit Your Macros: I wanted the tool for myself first.</p>
+          <a class="btn" href="https://www.instagram.com/shuperset/">Follow the training on Instagram @shuperset</a>
+        </div>
+        <div class="lift" aria-label="Training at a glance">
+          <div><b>10+</b><span>years training</span></div>
+          <div><b>Stage</b><span>the long-term goal</span></div>
+          <div><b>1 app</b><span>built for my own macros</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block talk" id="talk">
+    <div class="wrap">
+      <h2>Let's talk data, agents, or training splits.</h2>
+      <p class="sec-sub">Hiring, collaborating, or just curious about something here? I like hearing from people. Pick a starting point, or just say hi.</p>
+      <div class="starters">
+        <a href="mailto:sudamshurao2000@gmail.com?subject=Your%20GeoAI%20project">Ask about the GeoAI digital twin</a>
+        <a href="mailto:sudamshurao2000@gmail.com?subject=Let's%20talk%20agents">Talk multi-agent systems</a>
+        <a href="mailto:sudamshurao2000@gmail.com?subject=A%20role%20you%20might%20like">I have a role you might like</a>
+        <a href="mailto:sudamshurao2000@gmail.com?subject=Training%20question">Compare training splits</a>
+      </div>
+      <div class="contact-line">
+        <span>sudamshurao2000@gmail.com <button class="copy" id="copyEmail" type="button">Copy email</button></span>
+        <a href="https://linkedin.com/in/sudamshu-rao">LinkedIn</a>
+        <a href="https://github.com/SudamshuRao">GitHub</a>
+        <a href="https://www.instagram.com/shuperset/">Instagram</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="wrap"><footer>Built by Sudamshu Rao. Hexagons courtesy of a lot of time with H3.</footer></div>
+
+<script>
+/* ---------- Project data: add new builds here ---------- */
+const CATS = {
+  agents:   {label:"Agents & LLMs",  color:"#D9506E"},
+  ml:       {label:"ML & modeling",  color:"#E89A2C"},
+  analytics:{label:"Analytics",      color:"#2F7F7B"},
+  fullstack:{label:"Full-stack",     color:"#7A5FA8"}
+};
+const GITHUB = "https://github.com/SudamshuRao";
+
+const PROJECTS = [
+  {
+    title:"LA Encampment Risk: a GeoAI digital twin",
+    hook:"Where are encampments likely to form across Los Angeles, and which levers could a city realistically pull? A spatial model you can play with.",
+    cats:["ml","analytics"],
+    tools:["Python","GeoPandas","H3","scikit-learn","Roboflow","Streamlit","Folium"],
+    why:"City data on homelessness is noisy and scattered. I wanted a model that doesn't just predict risk, but lets someone ask \"what if we changed this?\" and see the answer on a map.",
+    built:[
+      "A spatial pipeline that aggregates city data onto H3 hexagonal grids, with VIF-pruned features.",
+      "A Random Forest teacher distilled into smaller neural student models.",
+      "Computer-vision verification of reports using Google Street View imagery and Roboflow.",
+      "An interactive digital twin: a hex-grid map, 16 grouped feature sliders, per-feature contribution charts, and a budget-constrained optimizer with three modes."
+    ],
+    learned:"The interface matters as much as the model. Sliders and a map make a black-box score something people can argue with, which is exactly what you want.",
+    next:"Measuring how much verified labels improve the model compared with raw 311 reports, and shipping a faster static version of the app.",
+    demo:{status:"soon"}, code:GITHUB, featured:true
+  },
+  {
+    title:"Pharmacy Spend Analytics: Medicare Part D",
+    hook:"Medicare Part D drug spend rose $94.6B in four years. What drove it, which drugs matter, and where are the savings?",
+    cats:["analytics"],
+    tools:["Python","SQL","DuckDB","pandas","NumPy","JavaScript","GitHub Pages"],
+    why:"After applying for an entry-level analyst role at a healthcare purchasing organization, I wanted to do the kind of work their analysts do: drug spend, contract savings and reconciling data across sources. I wrote it for a hypothetical VP of Pharmacy, as a scoping memo, an analysis and an executive memo.",
+    built:[
+      "A reproducible pipeline that loads CMS Part D Spending by Drug (14,536 rows) and CMS NADAC weekly prices (4.48M rows) into DuckDB, modeled in SQL as raw, staging and mart layers.",
+      "A drug-name-to-NDC crosswalk with three matching rules, scoped to the 257 drugs that make up 80% of 2024 spend, with coverage reported in dollars.",
+      "A 2020–2024 growth decomposition into price, volume and new-drug effects, biosimilar switching scenarios, and the impact of 2026 negotiated prices.",
+      "A 2025–2026 forecast chosen by rolling back-test, 11 automated data checks, and a public HTML dashboard.",
+      "Built solo in November 2026 with AI-assisted development. I ran the pipeline and made the analysis decisions."
+    ],
+    results:[
+      "Gross spend grew $94.6B (+49%) from 2020 to 2024. Volume added $65.1B and new drugs $31.3B, while price netted to −$1.9B: brand prices added $15.0B, offset by generics and insulin.",
+      "38 of 3,625 drugs make up half of 2024 spend.",
+      "Adalimumab biosimilars had just 4.6% of units in 2024. Switching half of Humira units is worth an estimated $1.2B–$2.3B a year, gross.",
+      "Applied to gross spend, the 2026 negotiated prices imply a $37.5B reduction, but CMS's own net-of-rebates estimate is about $6B. That gap is the main caveat."
+    ],
+    resultsNote:"All figures are gross, before rebates, since rebates aren't public.",
+    learned:"A reshaping query ran without errors and produced believable totals, yet it was silently dropping $157.8M of 2024 spend. Only a reconciliation check against the raw data caught it. I was also surprised that price contributed almost nothing, on net, to four years of growth.",
+    next:"Adding Part B (clinic-administered) drugs and the 2027 round of negotiated prices, and replacing my rule-based drug classes with an RxNorm-based classification.",
+    demo:{status:"live", url:"https://sudamshurao.github.io/pharmacy-spend-analytics/dashboard/"},
+    code:"https://github.com/SudamshuRao/pharmacy-spend-analytics",
+    links:[
+      {label:"Executive memo", url:"https://github.com/SudamshuRao/pharmacy-spend-analytics/blob/main/docs/02_executive_memo.md"},
+      {label:"Methodology", url:"https://github.com/SudamshuRao/pharmacy-spend-analytics/blob/main/docs/03_methodology.md"}
+    ]
+  },
+  {
+    title:"The first 30 days: when do wearable members lapse?",
+    hook:"When a fitness-wearable member stops training, when should a check-in reach them, and how big would a test need to be to prove it works?",
+    cats:["analytics"],
+    tools:["Python","pandas","statsmodels","SciPy","DuckDB","dbt","Quarto","Plotly","GitHub Actions"],
+    why:"I wanted to apply for WHOOP's Product Analyst role with evidence rather than claims, so I built the analysis I'd expect to do in the job: define a member behavior, read out an experiment, and size a test. I used only real public data, so every number can be checked. None of it is WHOOP data.",
+    built:[
+      "A dbt + DuckDB pipeline (staging, intermediate and marts, with automated data tests) over three public datasets: Endomondo workout logs, the HeartSteps V1 micro-randomized trial, and 3,428 Google Play reviews.",
+      "A lapse analysis (14+ days without a workout) using Kaplan–Meier survival curves with censoring and a past-only baseline to avoid look-ahead leakage.",
+      "An experiment readout of HeartSteps with the analysis plan committed to git before looking at any outcomes, using participant-clustered errors, a sensitivity check and guardrail metrics.",
+      "A power analysis for a lapse check-in A/B test, checked by simulation on the real lapse outcomes, plus a review-theme classifier validated blind against hand labels.",
+      "Built solo in November 2026 with AI assistance. I ran, checked and decided every step."
+    ],
+    results:[
+      "10,321 lapses from 1,300 members: 55.2% came back within 14 days (95% CI 54.3%–56.2%), but only 36.2% of those returning from 12+ weeks away did.",
+      "A HeartSteps suggestion raised steps in the next 30 minutes by +16.1% (95% CI +0.5% to +34.2%), closely reproducing the published +14%. The effect faded to +4.5% by day 30, with a CI that crosses zero.",
+      "Detecting a 2-point lift on that 55.2% baseline needs 19,316 lapsed members (9,658 per arm), with 79.5% power in simulation. Counting every lapse instead of each member once would understate uncertainty by a factor of 1.40.",
+      "On a blind 60-review test, only one of nine keyword rules held up, so the site reports no review theme shares."
+    ],
+    resultsNote:"Lapse findings are associations, not causes. HeartSteps (37 sedentary adults) measured short-term steps, not retention.",
+    learned:"The most useful moments were when a number got worse: removing look-ahead cut the \"slowdown before a lapse\" signal from 11 points to 5, and a blind test sank my review classifier. I also learned that labels need a protocol: my two labeling passes barely agreed until I added a \"general praise, no topic\" option.",
+    next:"Getting a second person to label the test reviews so the classifier is checked against two raters, and with real member data, replacing my assumed eligible base with actual lapse volume.",
+    demo:{status:"live", url:"https://sudamshurao.github.io/whoop-first-30-days/"},
+    code:"https://github.com/SudamshuRao/whoop-first-30-days",
+    links:[
+      {label:"Memo", url:"https://sudamshurao.github.io/whoop-first-30-days/memo.html"},
+      {label:"Experiment readout", url:"https://sudamshurao.github.io/whoop-first-30-days/readout.html"}
+    ]
+  },
+  {
+    title:"AI Resume Screener",
+    hook:"Eight specialized agents working together to read a resume against a job description and explain the score they give it.",
+    cats:["agents","fullstack"],
+    tools:["React","FastAPI","LangGraph","ChromaDB","SBERT"],
+    why:"Most resume screeners hand you a number with no reasoning. I wanted one that shows its work.",
+    built:[
+      "A decoupled API and agent microservice, with 8 agents orchestrated in a stateful LangGraph StateGraph.",
+      "Fault-tolerant routing, retry logic, and SSE streaming so you can watch the agents work.",
+      "A hybrid evaluator that combines SBERT embeddings, ChromaDB-based RAG and deterministic skill matching into an explainable Fit Score."
+    ],
+    learned:"Agents fail in boring ways: timeouts, malformed outputs, loops. Most of the engineering went into routing and retries, not prompts.",
+    next:"Adding evaluation sets so I can measure how well Fit Scores agree with human reviewers.",
+    demo:{status:"soon"}, code:GITHUB
+  },
+  {
+    title:"Fit Your Macros",
+    hook:"A mobile app that finds restaurant meals that fit your remaining macros, and splits them across meals, at zero ongoing API cost.",
+    cats:["fullstack","agents"],
+    tools:["React Native","Expo","FastAPI","PostgreSQL","Ollama","OpenStreetMap"],
+    why:"Hitting protein targets is easy at home and hard when you eat out. I built the tool I wanted on my own phone.",
+    built:[
+      "12 mobile screens and 25+ REST endpoints, with a multi-tenant-ready schema from day one.",
+      "A rule-based scoring and budget-splitting engine (full, partial and N-way meal splits).",
+      "Just 4 targeted calls to a local LLM via Ollama: intent parsing, pantry recipes with verified macros, personalization summaries and a nutrition-extraction fallback.",
+      "A tiered data pipeline that collected 1,353+ menu items across 10 restaurant chains, plus OpenStreetMap-based restaurant search."
+    ],
+    learned:"Deterministic-first keeps an app fast, cheap and trustworthy. The LLM is a specialist, not the whole system.",
+    next:"More restaurant chains and a smarter weekly planner.",
+    demo:{status:"soon"}, code:GITHUB
+  },
+  {
+    title:"Explainable Fraud Detection",
+    hook:"A Random Forest catches anomalies, then a fine-tuned LLaMA-3 explains each flag in plain language without making things up.",
+    cats:["ml","agents"],
+    tools:["scikit-learn","LLaMA-3","LoRA","LangChain","Gradio"],
+    why:"A fraud flag nobody can explain is hard to act on. I wanted the model's reasoning in words an analyst can read.",
+    built:[
+      "A Random Forest classifier on engineered features: log scaling, z-scores and categorical encoding.",
+      "A LoRA fine-tune of LLaMA-3 (~400K trainable parameters) whose explanations are constrained to the classifier's outputs.",
+      "A batch inference pipeline with LangChain orchestration and a Gradio UI for analyzing CSV files."
+    ],
+    learned:"Grounding the LLM in the classifier's actual outputs was the difference between useful explanations and confident fiction.",
+    next:"Comparing explanation quality across model sizes.",
+    demo:{status:"soon"}, code:GITHUB
+  },
+  {
+    title:"Does alignment make LLMs worse at reasoning?",
+    hook:"A team research project: DPO made Llama 3 clearer on simple questions but weaker on multi-step reasoning.",
+    cats:["ml","agents"],
+    tools:["PyTorch","Hugging Face","DPO","Llama 3"],
+    why:"Everyone aligns their models. We wanted to know what that costs in reasoning ability.",
+    built:[
+      "Fine-tuned Llama 3.1 8B and Llama 3.2 1B Instruct with Direct Preference Optimization on ELI5 data (4×A100, FP16).",
+      "A TF-IDF passage-selection pipeline to preprocess ELI5's supporting documents.",
+      "A before-and-after evaluation on GSM8K and MMLU, combining accuracy with ROSCOE reasoning-quality metrics."
+    ],
+    learned:"+8.3 points on MMLU humanities and +3.5 on single-step GSM8K, but −5.3 on multi-step reasoning. Clarity and depth pulled against each other, and the gap widened at 1B scale.",
+    next:"Testing whether reasoning-focused preference data closes the gap.",
+    demo:{status:"soon"}, code:GITHUB
+  },
+  {
+    title:"Yelp: who reviews, and who comes back?",
+    hook:"Segmenting users and ranking businesses across 10M+ Yelp records to understand engagement and retention.",
+    cats:["analytics"],
+    tools:["SQL","PySpark","Spark SQL","matplotlib","seaborn"],
+    why:"Ratings tell you what people thought. I wanted to know how they behave.",
+    built:[
+      "Spark SQL and PySpark analysis over 10M+ records.",
+      "User segments based on activity and review sentiment.",
+      "Rankings of top-performing businesses by engagement, plus retention visualizations."
+    ],
+    learned:"A small core of very active reviewers shapes much of what everyone else sees.",
+    next:"Turning the analysis into an interactive dashboard.",
+    demo:{status:"soon"}, code:GITHUB
+  }
+];
+
+/* ---------- Render projects ---------- */
+const list = document.getElementById("projects");
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+PROJECTS.forEach((p,i) => {
+  const li = document.createElement("li");
+  li.className = "proj";
+  li.dataset.cats = p.cats.join(" ");
+  const id = "case-"+i;
+  const glyph = p.cats.map(c => `<span class="hexdot" style="background:${CATS[c].color}" title="${CATS[c].label}"></span>`).join("");
+  const status = p.demo.status === "live"
+    ? `<span class="status live">Live demo</span>`
+    : `<span class="status soon">Demo in progress</span>`;
+  const demoLink = p.demo.status === "live"
+    ? `<a href="${esc(p.demo.url)}">Try the live demo</a>`
+    : `<span>Live demo coming soon</span>`;
+  li.innerHTML = `
+    <button class="proj-toggle" aria-expanded="${p.featured ? "true":"false"}" aria-controls="${id}">
+      <span class="glyph" aria-hidden="true">${glyph}</span>
+      <span>
+        <h3 class="proj-title">${esc(p.title)}</h3>
+        <p class="proj-hook">${esc(p.hook)}</p>
+        <ul class="tools">${p.tools.map(t=>`<li>${esc(t)}</li>`).join("")}</ul>
+      </span>
+      <span class="proj-side">${status}<span class="plus" aria-hidden="true"></span></span>
+    </button>
+    <div class="proj-body" id="${id}"><div>
+      <div class="case">
+        <div><h4>Why I built it</h4><p>${esc(p.why)}</p></div>
+        <div><h4>What I learned</h4><p>${esc(p.learned)}</p></div>
+        <div class="wide"><h4>What I built</h4><ul>${p.built.map(b=>`<li>${esc(b)}</li>`).join("")}</ul></div>
+        ${p.results ? `<div class="wide"><h4>What I found</h4><ul>${p.results.map(r=>`<li>${esc(r)}</li>`).join("")}</ul>${p.resultsNote ? `<p class="fine">${esc(p.resultsNote)}</p>` : ""}</div>` : ""}
+        <div><h4>What's next</h4><p>${esc(p.next)}</p></div>
+        <div><h4>See it</h4><div class="case-links">${demoLink}<a href="${esc(p.code)}">Code on GitHub</a>${(p.links||[]).map(l=>`<a href="${esc(l.url)}">${esc(l.label)}</a>`).join("")}</div></div>
+      </div>
+    </div></div>`;
+  list.appendChild(li);
+});
+list.addEventListener("click", e => {
+  const btn = e.target.closest(".proj-toggle");
+  if (!btn) return;
+  btn.setAttribute("aria-expanded", btn.getAttribute("aria-expanded") === "true" ? "false" : "true");
+});
+
+/* ---------- Filters ---------- */
+const filters = document.querySelector(".filters");
+const opts = [["all","All", null], ...Object.entries(CATS).map(([k,v]) => [k, v.label, v.color])];
+opts.forEach(([key,label,color]) => {
+  const b = document.createElement("button");
+  b.className = "chip"; b.type = "button";
+  b.setAttribute("aria-pressed", key === "all" ? "true" : "false");
+  b.innerHTML = (color ? `<span class="hexdot" style="background:${color}" aria-hidden="true"></span>` : "") + label;
+  b.addEventListener("click", () => {
+    filters.querySelectorAll(".chip").forEach(c => c.setAttribute("aria-pressed","false"));
+    b.setAttribute("aria-pressed","true");
+    list.querySelectorAll(".proj").forEach(li => {
+      li.hidden = !(key === "all" || li.dataset.cats.split(" ").includes(key));
+    });
+  });
+  filters.appendChild(b);
+});
+
+/* ---------- Copy email ---------- */
+document.getElementById("copyEmail").addEventListener("click", async e => {
+  const btn = e.currentTarget;
+  try { await navigator.clipboard.writeText("sudamshurao2000@gmail.com"); btn.textContent = "Copied"; }
+  catch { btn.textContent = "Select and copy the address"; }
+  setTimeout(() => btn.textContent = "Copy email", 2200);
+});
+
+/* ---------- Hex heat map ---------- */
+(() => {
+  const cv = document.getElementById("hexmap");
+  const ctx = cv.getContext("2d");
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const stops = [[241,239,246],[252,227,176],[232,154,44],[217,80,110],[74,44,110]];
+  const ramp = t => {
+    t = Math.max(0, Math.min(1, t));
+    const x = t * (stops.length - 1), i = Math.min(stops.length - 2, Math.floor(x)), f = x - i;
+    const a = stops[i], b = stops[i+1];
+    return `rgb(${a.map((v,k)=>Math.round(v+(b[k]-v)*f)).join(",")})`;
+  };
+  let hexes = [], R = 16, W = 0, H = 0, dpr = 1, pointer = null, running = false;
+  // fixed "city" hotspots in unit coordinates
+  const spots = [[.30,.38,.55,.16],[.62,.30,.42,.12],[.55,.66,.60,.18],[.80,.72,.30,.10],[.18,.75,.28,.10]];
+  function base(x, y){
+    let v = 0;
+    for (const [sx,sy,amp,s] of spots){ const d2 = (x-sx)**2 + (y-sy)**2; v += amp*Math.exp(-d2/(2*s*s)); }
+    return Math.min(.55, v*0.8);
+  }
+  function layout(){
+    dpr = window.devicePixelRatio || 1;
+    const r = cv.getBoundingClientRect(); W = r.width; H = r.height;
+    cv.width = W*dpr; cv.height = H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
+    R = Math.max(11, W/30);
+    const hw = Math.sqrt(3)*R, vh = 1.5*R;
+    hexes = [];
+    for (let row = 0, y = R; y < H - R*0.5; row++, y += vh){
+      for (let x = hw/2 + (row%2 ? hw/2 : 0); x < W - hw*0.4; x += hw){
+        // shape the grid into a soft blob so it reads as a city, not a rectangle
+        const nx = x/W - .5, ny = y/H - .5;
+        if (nx*nx/.25 + ny*ny/.23 > 1) continue;
+        hexes.push({x, y, b: base(x/W, y/H), h: 0});
+      }
+    }
+    draw();
+  }
+  function hexPath(x, y, r){
+    ctx.beginPath();
+    for (let k = 0; k < 6; k++){ const a = Math.PI/180*(60*k-30); ctx.lineTo(x + r*Math.cos(a), y + r*Math.sin(a)); }
+    ctx.closePath();
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    for (const h of hexes){
+      hexPath(h.x, h.y, R*0.93);
+      ctx.fillStyle = ramp(0.12 + h.b + h.h);
+      ctx.fill();
+    }
+  }
+  function tick(){
+    let active = false;
+    for (const h of hexes){
+      if (pointer){
+        const d2 = (h.x-pointer.x)**2 + (h.y-pointer.y)**2, s = R*2.6;
+        h.h = Math.min(.45, h.h + 0.05*Math.exp(-d2/(2*s*s)));
+      }
+      if (h.h > 0.002){ h.h *= 0.965; active = true; } else h.h = 0;
+    }
+    draw();
+    if (active || pointer) requestAnimationFrame(tick); else running = false;
+  }
+  function start(){ if (!running){ running = true; requestAnimationFrame(tick); } }
+  function move(e){
+    const r = cv.getBoundingClientRect();
+    pointer = {x: e.clientX - r.left, y: e.clientY - r.top};
+    if (reduce){
+      for (const h of hexes){ const d2 = (h.x-pointer.x)**2 + (h.y-pointer.y)**2, s = R*2.6; h.h = Math.min(.45, h.h + 0.2*Math.exp(-d2/(2*s*s))); }
+      draw(); return;
+    }
+    start();
+  }
+  cv.addEventListener("pointermove", move);
+  cv.addEventListener("pointerdown", move);
+  cv.addEventListener("pointerleave", () => { pointer = null; });
+  cv.addEventListener("pointerup", e => { if (e.pointerType !== "mouse") pointer = null; });
+  let rt; addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(layout, 120); });
+  layout();
+})();
+</script>
+</body>
+</html>
